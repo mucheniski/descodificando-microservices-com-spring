@@ -56,6 +56,73 @@ Não existe uma regra ou modelo para arquitetura de microservices, devem ser ada
 API Composition, SAGA, Event Driven com Event Notification e Event State transfer, Circuit Breaker, Cross-Cutting e muito mais, uma verdadeira descodificação dos principais Microservices Patterns utilizados no mercado. Aprender esses padrões te trará conhecimentos necessários para não cometer erros ou reinventar a roda, um conjunto de soluções que te farão dar um salto na carreira.  
 
 
+## Tipos de comunicacao e padroes.  
+![](images/TiposComunicacao.png)  
+
+
+## Synchronous Communication  
+Comunicacao Síncrona - One To One, é um exemplo de request response, onde as apis expoem os serviços para que a comunicação possa ser feita entre os microserviços.  
+![](images/ComunicacaoSincrona.png)  
+
+
+Service Registry / Discovery Pattern - Monitora todos os enderecos de servicos que estao cadastrados nele, direciona as chamadas para os seus respectivos destinos. Serve para resolver o problema das preocupacoes transversais entre os serviços, os microservices se registram nele, ele usa ids unicos para direcionar todas as chamadas, é o mesmo conceito do roteador entre chamadas internas de microservice para microservice, porem para chamadas rest.  
+![](images/ServiceRegistry.png)  
+
+Circuit Breaker Pattern - Previne falhas caso algum service esteja fora, ele atua tanto na política de retentativas quanto como um disjuntor, onde existem os estados aberto, meio aberto e fechado, quando os serviços estão em determinado status é feita uma tratativa e garante que as requisições sejam entregues apenas quando o service está com status aberto.  
+![](images/CircuitBraker.png)  
+
+Api Gateway Pattern - Centraliza todas as requisições externas, também utiliza o service registry para efetuar as validacoes de forma dinamica, atua como um cliente do service registry para direcionar as chamadas.  
+![](images/ApiGateway.png)  
+
+Api Composition Pattern - Usado para criar um composer com varias informacoes de varios servicos diferentes, como quanto por exemplo é preciso criar um relatorio com informacoes de microservices diferentes, o composer reune todas essas informacoes e quando a chamada passa pelo gateway vai direto para ele e já traz tudo.  
+Uma alternativa é implementar o composition dentro do gateway como um endpoint específico por exemplo, onde toda a vez que for chamado ele reune as informacoes nescessárias.  
+![](images/ApiComposition.png)  
+
+## Asynchronous Communication  
+Pose ser usado o Spring Cloud Stream ou Spring AMQP  
+Comunicacao pode ser feita one-to-one de duas formas. One-way notification ou Asynchornous request/response.
+One-way não precisa de retorno, request/response precisa.  
+![](images/AssincronaOneToOne.png)  
+
+Pode ser feita também da forma One-to-Many - Utiliza o publish/subscribe com topicos para redirecionar todos os serviços que estiverem escutando os topicos.  
+![](images/AssincronaOneToMany.png.png)  
+
+Broker Pattern - Producer gera a mensagem envia para o Broker que direciona para o Cosumer.  
+![](images/BrokerPattern.png)  
+
+Mediator Pattern - Producer envia para o Broker, Broker envia para o Mediator que envia para os Consumers finais.  
+Faz o papel de orquestrador, faz validacoes e processamentos e depois vai enviar a mensagem.  
+![](images/MediatorPattern.png)  
+
+Event Notification Pattern - Envia uma notificacao com o evento, todos os servicos escutando o evento recebem a notificacao, consultam o servico produtor para validar o que foi feito e processam a informacao, como no caso foi atualizado o endereco do cliente, apenas o payment service usa o endereco, assim ele consulta o customer service e atualiza o endereco de acordo com o dele.  
+![](images/EventNotificationPattern.png)  
+
+
+Event-Carried State Transfer Pattern - Para nao ficar fazendo consultas no servico como no exemplo acima, é enviado um stado da alteracao que foi feita, ou seja, todas as alteracoes completas, como se fosse um DTO por exemplo, para os servicos que estao escutando, cada servico que vai precisar dos dados faz o que for preciso com o estado do que foi feito, sem consultar o servico producer.  
+![](images/EventCarriedStateTransferPattern.png)  
+
+Saga Pattern - Passa transacoes entre os servicos, para que as transacoes sejam distribuidas, como no caso dos varios bancos de dados.  
+Exemplo 1
+![](images/SagaPattern1.png)  
+
+Exemplo 2 com falha no processo e compensacao feita, como por exemplo quando da erro no pagamento.  
+![](images/SagaPattern2.png)
+
+
+Externalized Configuration - um serviço para gerenciar todas as configuracoes de todos os servicos. 
+![](images/ExternalizedConfiguration.png)  
+
+
+## Observability:  
+
+Distributed Tracing / Matrics  
+![](images/Observability.png)  
+
+Log Aggregation  
+![](images/LogAggregation.png)  
+
+
+
 ### -> Dia 21/10 (quinta-feira) - Apresentação Projeto Decoder  
 Este evento é apenas uma degustação do que é realmente o Projeto Decoder, que venho trabalhando a meses e contém um conteúdo inédito e exclusivo no Brasil, acompanhe neste último dia o que tenho para você, é imperdível!  
 
